@@ -6,13 +6,8 @@ async function runMigration() {
   const sqlPath = path.join(__dirname, 'config', 'init-db.sql');
   const sql = fs.readFileSync(sqlPath, 'utf-8');
   try {
-    // Split on semicolon followed by newline to avoid issues with procedural blocks
-    const statements = sql.split(/;\s*\n/).map(s => s.trim()).filter(Boolean);
-    for (const statement of statements) {
-      if (statement) {
-        await pool.query(statement);
-      }
-    }
+    // Run the entire SQL file as a single query to support procedural blocks
+    await pool.query(sql);
     console.log('Migration completed successfully.');
   } catch (err) {
     console.error('Migration failed:', err);
