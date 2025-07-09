@@ -23,8 +23,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Switch,
-  FormControlLabel,
   Alert,
   CircularProgress,
   Avatar,
@@ -36,8 +34,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ImageIcon from '@mui/icons-material/Image';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import * as giftService from '../../services/gifts.service';
@@ -82,25 +78,6 @@ const StyledPaper = styled(Paper)({
   background: '#fff',
 });
 
-const StyledTable = styled(Table)({
-  '& .MuiTableCell-head': {
-    backgroundColor: '#f4f6fb',
-    fontFamily: 'Inter, Montserrat, sans-serif',
-    fontWeight: 700,
-    fontSize: '0.97rem',
-    color: '#222',
-    borderBottom: '2px solid #f0f0f0',
-    padding: '0.85rem',
-  },
-  '& .MuiTableCell-body': {
-    fontFamily: 'Inter, Montserrat, sans-serif',
-    fontSize: '0.97rem',
-    color: '#444',
-    padding: '0.85rem',
-    borderBottom: '1px solid #f4f6fb',
-  },
-});
-
 const StyledTableRow = styled(TableRow)<{ $even?: boolean }>(({ $even }) => ({
   backgroundColor: $even ? '#f8fafd' : '#fff',
   transition: 'background 0.18s',
@@ -134,52 +111,6 @@ const StatusChip = styled(Chip)<{ status: string }>(({ status }) => ({
   }),
 }));
 
-const ActionButton = styled(IconButton)({
-  padding: '7px',
-  borderRadius: '8px',
-  background: '#f4f6fb',
-  color: '#555',
-  transition: 'all 0.18s',
-  '&:hover': {
-    background: '#eafaf1',
-    color: '#219150',
-    transform: 'scale(1.08)',
-  },
-});
-
-const AddButton = styled(Button)({
-  borderRadius: '22px',
-  padding: '0.65rem 1.7rem',
-  fontFamily: 'Inter, Montserrat, sans-serif',
-  fontWeight: 600,
-  fontSize: '1rem',
-  textTransform: 'none',
-  background: '#222',
-  color: '#fff',
-  boxShadow: crmShadow,
-  '&:hover': {
-    background: '#444',
-    boxShadow: '0 4px 16px rgba(44,62,80,0.10)',
-  },
-});
-
-const StyledDialog = styled(Dialog)({
-  '& .MuiDialog-paper': {
-    borderRadius: '14px',
-    boxShadow: '0 8px 32px rgba(44,62,80,0.10)',
-    padding: '1.5rem 1.5rem 1rem 1.5rem',
-  },
-});
-
-const DialogTitleStyled = styled(DialogTitle)({
-  fontFamily: 'Inter, Montserrat, sans-serif',
-  fontWeight: 800,
-  fontSize: '1.5rem',
-  color: '#222',
-  textAlign: 'left',
-  paddingBottom: '0.5rem',
-});
-
 const ImagePreview = styled(Card)({
   width: 100,
   height: 100,
@@ -196,20 +127,6 @@ const ImagePreview = styled(Card)({
   },
 });
 
-const UploadButton = styled(Button)({
-  marginTop: '1rem',
-  backgroundColor: '#8B0000',
-  color: '#fff',
-  '&:hover': {
-    backgroundColor: '#600000',
-  },
-});
-
-const HiddenInput = styled('input')({
-  display: 'none',
-});
-
-// Styled input components from guests page
 const StyledTextField = styled(TextField)({
   '& .MuiOutlinedInput-root': {
     borderRadius: '12px',

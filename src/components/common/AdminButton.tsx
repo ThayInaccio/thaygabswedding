@@ -1,7 +1,7 @@
 import { Button, ButtonProps } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-const AdminButton = styled(Button)<ButtonProps>(({ theme }) => ({
+const AdminButton = styled(Button)<ButtonProps>({
   borderRadius: 22,
   padding: '0.65rem 1.7rem',
   fontFamily: 'Inter, Montserrat, sans-serif',
@@ -36,6 +36,6 @@ const AdminButton = styled(Button)<ButtonProps>(({ theme }) => ({
       backgroundColor: '#d32f2f',
     },
   },
-}));
+});
 
 export default AdminButton; 

@@ -4,7 +4,7 @@ import { styled, useTheme } from '@mui/material/styles';
 
 const CountdownSection = styled(Box)(({ theme }) => ({
   padding: '4rem 2rem',
-  backgroundColor: '#f8f9fa',
+  backgroundColor: '#fff',
   [theme.breakpoints.down('md')]: {
     padding: '2.5rem 0.5rem',
   },

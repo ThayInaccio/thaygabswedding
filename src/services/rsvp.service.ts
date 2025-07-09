@@ -48,7 +48,7 @@ export const rsvpService = {
   // Get guest statistics
   getGuestStats: async (): Promise<GuestStats> => {
     try {
-      const response = await api.get('/rsvp/stats');
+      const response = await api.get('/rsvp?stats=true');
       return response.data.data || response.data;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to fetch guest statistics');

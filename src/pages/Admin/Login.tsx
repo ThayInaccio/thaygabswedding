@@ -14,31 +14,31 @@ import { useAuth } from '../../contexts/AuthContext';
 import LockIcon from '@mui/icons-material/Lock';
 import AdminButton from '../../components/common/AdminButton';
 
-const LoginSection = styled(Box)(({ theme }) => ({
+const LoginSection = styled(Box)({
   minHeight: '100vh',
   background: 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   padding: '2rem',
-}));
+});
 
-const LoginCard = styled(Paper)(({ theme }) => ({
+const LoginCard = styled(Paper)({
   padding: '3rem',
   borderRadius: '16px',
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
   maxWidth: '400px',
   width: '100%',
   textAlign: 'center',
-}));
+});
 
-const LoginTitle = styled(Typography)(({ theme }) => ({
+const LoginTitle = styled(Typography)({
   fontFamily: "'Great Vibes', cursive",
   fontSize: '2.5rem',
   fontWeight: 400,
   color: '#8B0000',
   marginBottom: '1rem',
-}));
+});
 
 const LoginSubtitle = styled(Typography)({
   fontFamily: "'Montserrat', sans-serif",

@@ -24,7 +24,7 @@ import RsvpIcon from '@mui/icons-material/Rsvp';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
-const StyledAppBar = styled(AppBar)<{ $isAboutVisible: boolean; $shouldShowDropdown: boolean }>(({ $isAboutVisible, $shouldShowDropdown }) => ({
+const StyledAppBar = styled(AppBar)<{ $shouldShowDropdown: boolean }>(({ $shouldShowDropdown }) => ({
   background: 'transparent',
   boxShadow: 'none',
   transition: 'all 0.3s ease',
@@ -286,12 +286,10 @@ const Header: React.FC = () => {
   }, [location.pathname]);
 
   const navItems = [
-    { label: 'Home', path: '/', icon: <HomeIcon /> },
-    { label: 'Nossa História', path: '/#about', icon: <FavoriteIcon /> },
-    { label: 'Casório', path: '/#wedding-details', icon: <EventIcon /> },
-    { label: 'Álbum', path: '/album', icon: <PhotoLibraryIcon /> },
+    { label: 'Confirmar Presença', path: '/rsvp', icon: <RsvpIcon /> },
     { label: 'Presentes', path: '/gifts', icon: <CardGiftcardIcon /> },
-    { label: 'RSVP', path: '/rsvp', icon: <RsvpIcon /> },
+    { label: 'Nossa História', path: '/#about', icon: <FavoriteIcon /> },
+    { label: 'Local', path: '/#wedding-details', icon: <EventIcon /> },
   ];
 
   const toggleMobileMenu = () => {
@@ -333,7 +331,6 @@ const Header: React.FC = () => {
     <StyledAppBar
       position="fixed"
       className={isScrolled ? 'scrolled' : ''}
-      $isAboutVisible={isAboutVisible}
       $shouldShowDropdown={shouldShowDropdown}
     >
       <StyledToolbar>

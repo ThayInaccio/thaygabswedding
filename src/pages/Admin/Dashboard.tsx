@@ -11,7 +11,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemAvatar,
   Chip,
   Alert,
   CircularProgress,
@@ -19,7 +18,6 @@ import {
 import { styled } from '@mui/material/styles';
 import PeopleIcon from '@mui/icons-material/People';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CancelIcon from '@mui/icons-material/Cancel';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import EventIcon from '@mui/icons-material/Event';
 import RedeemIcon from '@mui/icons-material/Redeem';
@@ -179,12 +177,6 @@ const ActivityText = styled(Typography)({
   color: '#333',
 });
 
-const ActivityTime = styled(Typography)({
-  fontFamily: "'Montserrat', sans-serif",
-  fontSize: '0.8rem',
-  color: '#999',
-});
-
 const StatusChip = styled(Chip)({
   fontFamily: "'Montserrat', sans-serif",
   fontWeight: 500,
@@ -207,15 +199,15 @@ const Dashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [totalConfirmed, setTotalConfirmed] = useState(0);
   const [recentActivities, setRecentActivities] = useState<any[]>([]);
+  const [lastLoad, setLastLoad] = useState<number>(0);
 
   useEffect(() => {
     loadStats();
-    // Fetch confirmed purchases total and recent activity
     Promise.all([
       fetchAllPurchases(),
       rsvpService.getAllRSVPs(),
       getAllGifts()
-    ]).then(([purchases, guests, gifts]) => {
+    ]).then(([purchases, guests, _]) => {
       const confirmedPurchases = purchases
         .filter((p: any) => p.status === 'confirmed')
         .sort((a: any, b: any) => new Date(b.confirmed_at || b.created_at).getTime() - new Date(a.confirmed_at || a.created_at).getTime())
@@ -233,7 +225,7 @@ const Dashboard: React.FC = () => {
           label: `Confirmação de presença: ${g.name}`,
         }));
       setRecentActivities([...confirmedPurchases, ...guestConfirmations]
-        .sort((a, b) => 0) // keep order as is
+        .sort(() => 0) // keep order as is
         .slice(0, 8));
       // Total confirmed
       const total = purchases
@@ -244,6 +236,12 @@ const Dashboard: React.FC = () => {
   }, []);
 
   const loadStats = async () => {
+    const now = Date.now();
+    if (now - lastLoad < 10000) { // 10 seconds cooldown
+      setError('Por favor, aguarde antes de recarregar as estatísticas.');
+      return;
+    }
+    setLastLoad(now);
     try {
       setLoading(true);
       setError(null);
@@ -259,36 +257,6 @@ const Dashboard: React.FC = () => {
 
   const getConfirmationRate = () => {
     return stats.totalGuests > 0 ? (stats.confirmedGuests / stats.totalGuests) * 100 : 0;
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'confirmed':
-        return '#4caf50';
-      case 'declined':
-        return '#f44336';
-      case 'reserved':
-        return '#ff9800';
-      case 'purchased':
-        return '#9c27b0';
-      default:
-        return '#666';
-    }
-  };
-
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case 'confirmed':
-        return 'Confirmado';
-      case 'declined':
-        return 'Recusado';
-      case 'reserved':
-        return 'Reservado';
-      case 'purchased':
-        return 'Comprado';
-      default:
-        return status;
-    }
   };
 
   if (loading) {
@@ -323,7 +291,7 @@ const Dashboard: React.FC = () => {
               <StatsIcon>
                 <PeopleIcon sx={{ fontSize: '2rem' }} />
               </StatsIcon>
-              <StatsValue>{stats.totalGuests}</StatsValue>
+              <StatsValue>{stats.totalRSVPs ?? 0}</StatsValue>
               <StatsLabel>Convidados</StatsLabel>
               <StatsDescription>Total de convidados</StatsDescription>
               <Chip 
@@ -342,11 +310,11 @@ const Dashboard: React.FC = () => {
               <StatsIcon>
                 <CheckCircleIcon sx={{ fontSize: '2rem' }} />
               </StatsIcon>
-              <StatsValue>{stats.confirmedGuests}</StatsValue>
+              <StatsValue>{stats.confirmedGuests ?? 0}</StatsValue>
               <StatsLabel>Confirmados</StatsLabel>
               <StatsDescription>Convidados confirmados</StatsDescription>
               <Chip 
-                label={`${stats.pendingGuests} pendentes`}
+                label={`${stats.pendingGuests ?? 0} pendentes`}
                 color="warning"
                 size="small"
                 sx={{ fontWeight: 600 }}
@@ -406,7 +374,7 @@ const Dashboard: React.FC = () => {
                   sx={{ backgroundColor: '#e8f5e8', color: '#2e7d32' }}
                 />
                 <StatusChip 
-                  label={`${stats.pendingGuests} Pendentes`}
+                  label={`${stats.pendingGuests ?? 0} Pendentes`}
                   sx={{ backgroundColor: '#fff3e0', color: '#ef6c00' }}
                 />
                 <StatusChip 

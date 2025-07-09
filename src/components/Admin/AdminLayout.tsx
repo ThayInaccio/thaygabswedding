@@ -13,9 +13,8 @@ import {
   useTheme,
   useMediaQuery,
 } from '@mui/material';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { useNavigate, useLocation } from 'react-router-dom';
-import MenuIcon from '@mui/icons-material/Menu';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 import PeopleIcon from '@mui/icons-material/People';
@@ -31,7 +30,7 @@ const sidebarIcon = '#8b8b8b';
 const sidebarActive = '#e6f0ff';
 const sidebarActiveIcon = '#1976d2';
 
-const Sidebar = styled(Box)(({ theme }) => ({
+const Sidebar = styled(Box)({
   width: sidebarWidth,
   background: sidebarBg,
   height: '100vh',
@@ -47,7 +46,7 @@ const Sidebar = styled(Box)(({ theme }) => ({
   borderTopRightRadius: 24,
   borderBottomRightRadius: 24,
   boxShadow: '2px 0 16px 0 rgba(44, 62, 80, 0.04)',
-}));
+});
 
 const SidebarHeader = styled(Box)({
   padding: '0 2rem 2rem 2rem',

@@ -136,19 +136,15 @@ export const getRsvpById = async (req: Request, res: Response) => {
 export const updateRsvp = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { confirmed } = req.body;
+    const updateData = req.body;
 
-    if (confirmed === undefined) {
-      return res.status(400).json({ success: false, error: 'Confirmation status is required.' });
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ success: false, error: 'No update data provided.' });
     }
 
-    const rsvp = await RSVPModel.update(id, { confirmed });
-    
+    const rsvp = await RSVPModel.update(id, updateData);
     if (!rsvp) {
-      return res.status(404).json({
-        success: false,
-        error: 'RSVP not found'
-      });
+      return res.status(404).json({ success: false, error: 'RSVP not found' });
     }
 
     res.json({

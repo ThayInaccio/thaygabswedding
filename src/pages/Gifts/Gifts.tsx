@@ -17,8 +17,6 @@ import {
   DialogTitle,
   DialogActions,
   IconButton,
-  useTheme,
-  useMediaQuery,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -30,7 +28,7 @@ import type { Gift } from '../../types';
 import QRCode from 'react-qr-code';
 import Autocomplete from '@mui/lab/Autocomplete';
 import TextField from '@mui/material/TextField';
-import { rsvpService, Guest, findGuestByName } from '../../services/rsvp.service';
+import { Guest, findGuestByName } from '../../services/rsvp.service';
 import { registerPurchase } from '../../services/api';
 
 const GiftsSection = styled(Box)(({ theme }) => ({
@@ -74,7 +72,7 @@ const PageSubtitle = styled(Typography)(({ theme }) => ({
   },
 }));
 
-const GiftCard = styled(Card)(({ theme }) => ({
+const GiftCard = styled(Card)({
   position: 'relative',
   borderRadius: '16px',
   overflow: 'hidden',
@@ -87,7 +85,7 @@ const GiftCard = styled(Card)(({ theme }) => ({
     transform: 'translateY(-8px) scale(1.02)',
     boxShadow: '0 20px 40px rgba(139, 0, 0, 0.15)',
   },
-}));
+});
 
 const GiftMedia = styled(CardMedia)({
   height: '200px',
@@ -184,13 +182,13 @@ const StatusChip = styled(Chip)({
   },
 });
 
-const StyledDialog = styled(Dialog)(({ theme }) => ({
+const StyledDialog = styled(Dialog)({
   '& .MuiDialog-paper': {
     borderRadius: '16px',
     maxWidth: '500px',
     width: '90vw',
   },
-}));
+});
 
 const LoadingContainer = styled(Box)({
   display: 'flex',
@@ -208,9 +206,6 @@ const ErrorContainer = styled(Box)({
   gap: '1rem',
 });
 
-const PIX_KEY = 'casamentothaygabs@gmail.com';
-const PIX_RECEIVER_NAME = 'Thay & Gabs';
-const PIX_CITY = 'SAO PAULO';
 const NUBANK_PIX_PAYLOAD = "00020126490014BR.GOV.BCB.PIX0127casamentothaygabs@gmail.com5204000053039865802BR5923Gabriel Campos Ferreira6009SAO PAULO62140510miThpoFX8H6304CAA1";
 const NUBANK_PIX_LINK = "https://nubank.com.br/cobrar/q6ii6/686a78f7-dd6e-43d7-8e8c-8faafe23c22a";
 
@@ -225,7 +220,7 @@ const HeartCelebration = () => {
     size: 2 + Math.random() * 2.5, // rem
     top: `${10 + Math.random() * 80}%`,
   }));
-  const iaras = Array.from({ length: 40 }, (_, i) => ({
+  const iaras = Array.from({ length: 40 }, () => ({
     left: `${Math.random() * 95}%`,
     delay: `${Math.random() * 1.2}s`,
     size: 60 + Math.random() * 80, // px
@@ -330,23 +325,16 @@ const Gifts: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
-  const [selectedGift, setSelectedGift] = useState<Gift | null>(null);
   const [buyDialogOpen, setBuyDialogOpen] = useState(false);
   const [buyGift, setBuyGift] = useState<Gift | null>(null);
-  const [buyerEmail, setBuyerEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
   const [showCelebration, setShowCelebration] = useState(false);
-  const [guests, setGuests] = useState<Guest[]>([]);
   const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null);
   const [guestError, setGuestError] = useState('');
   const [guestOptions, setGuestOptions] = useState<Guest[]>([]);
   const [guestLoading, setGuestLoading] = useState(false);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     loadGifts();
-    rsvpService.getAllRSVPs().then(setGuests).catch(() => setGuests([]));
   }, []);
 
   const loadGifts = async () => {
@@ -366,16 +354,16 @@ const Gifts: React.FC = () => {
   const handlePurchase = (gift: Gift) => {
     setBuyGift(gift);
     setBuyDialogOpen(true);
-    setBuyerEmail('');
-    setEmailError('');
+    setSelectedGuest(null);
+    setGuestError('');
     // Pix payload generation removed
   };
 
   const handleBuyDialogClose = () => {
     setBuyDialogOpen(false);
     setBuyGift(null);
-    setBuyerEmail('');
-    setEmailError('');
+    setSelectedGuest(null);
+    setGuestError('');
   };
 
   const handleBuySubmit = async () => {

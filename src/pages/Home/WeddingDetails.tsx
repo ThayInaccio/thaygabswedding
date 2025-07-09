@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Typography,
@@ -6,12 +6,18 @@ import {
   Chip,
   Grid,
   Paper,
+  Avatar,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import EventIcon from '@mui/icons-material/Event';
-import moradaIcon from '../../assets/morada.png';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import './WeddingDetails.css';
+import chandler from '../../assets/dress/chandler.png';
+import theodore from '../../assets/dress/theodore.png';
+import rachel from '../../assets/dress/rachel.png';
+import atonement from '../../assets/dress/atonement.png';
 
 const WeddingSection = styled(Box)(({ theme }) => ({
   padding: '8rem 0',
@@ -56,80 +62,8 @@ const Subtitle = styled(Typography)(({ theme }) => ({
   },
 }));
 
-const DetailsCard = styled(Paper)(({ theme }) => ({
-  padding: '3rem',
-  borderRadius: '0',
-  background: '#ffffff',
-  boxShadow: 'none',
-  border: '1px solid #f0f0f0',
-  height: '100%',
-  transition: 'all 0.3s ease',
-  '&:hover': {
-    borderColor: '#b22432',
-    transform: 'translateY(-2px)',
-  },
-  [theme.breakpoints.down('md')]: {
-    padding: '2.5rem',
-  },
-  [theme.breakpoints.down('sm')]: {
-    padding: '2rem',
-  },
-}));
-
-const DetailTitle = styled(Typography)(() => ({
-  fontFamily: "'Montserrat', sans-serif",
-  fontSize: '1.25rem',
-  fontWeight: 400,
-  color: '#333',
-  marginBottom: '1.5rem',
-  display: 'flex',
-  alignItems: 'center',
-  gap: '0.75rem',
-  letterSpacing: '0.5px',
-}));
-
-const DetailText = styled(Typography)(() => ({
-  fontFamily: "'Montserrat', sans-serif",
-  fontSize: '0.95rem',
-  color: '#666',
-  lineHeight: 1.7,
-  marginBottom: '1rem',
-  fontWeight: 300,
-}));
-
-const AddressText = styled(Typography)(() => ({
-  fontFamily: "'Montserrat', sans-serif",
-  fontSize: '1.1rem',
-  color: '#333',
-  lineHeight: 1.6,
-  fontWeight: 400,
-  marginBottom: '1.5rem',
-  letterSpacing: '0.3px',
-}));
-
-const TimeChip = styled(Chip)(() => ({
-  fontFamily: "'Montserrat', sans-serif",
-  fontWeight: 400,
-  fontSize: '0.85rem',
-  background: '#b22432',
-  color: '#ffffff',
-  borderRadius: '0',
-  height: '36px',
-  '& .MuiChip-label': {
-    padding: '0 20px',
-  },
-}));
-
-const MapContainer = styled(Box)(() => ({
-  margin: '2rem 0',
-  borderRadius: '0',
-  overflow: 'hidden',
-  border: '1px solid #f0f0f0',
-}));
 
 const WeddingDetails: React.FC = () => {
-  const navigate = useNavigate();
-
 
   return (
     <WeddingSection id="wedding-details">
@@ -141,66 +75,87 @@ const WeddingDetails: React.FC = () => {
           Junte-se a nós para celebrar este momento especial em nossas vidas
         </Subtitle>
 
-        <Grid container spacing={4}>
-          <Grid item xs={12}>
-            <DetailsCard>
-              <DetailTitle>
-                <img src={moradaIcon} alt="Morada" style={{ width: '24px', height: '24px' }} />
-                Local da Cerimônia
-              </DetailTitle>
-              <AddressText>
-                Alameda Carlos Barduchi, 585 - Dois Córregos, Valinhos - SP, 13278-170
-              </AddressText>
-              <MapContainer>
-                <iframe
-                  title="Mapa do Local da Cerimônia"
-                  src="https://www.google.com/maps?q=Alameda+Carlos+Barduchi,+585+-+Dois+Córregos,+Valinhos+-+SP,+13278-170&output=embed"
-                  width="100%"
-                  height="250"
-                  style={{ border: 0 }}
-                  allowFullScreen={true}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </MapContainer>
-              <TimeChip 
-                label="15:00" 
-                icon={<AccessTimeIcon />}
-              />
-            </DetailsCard>
-          </Grid>
+        <Grid container spacing={4} alignItems="center" justifyContent="center">
+          <Grid item xs={12} md={4}>
+            <Box display="flex" flexDirection="column" alignItems="center">
+              <Typography align="center" sx={{ color: '#666' }}>
+              Poderíamos simplesmente descrever como esporte fino, comum para um casamento no fim da tarde, mas isso não nos representaria por completo. Claro que um vestido de festa, um terno e uma calça social serão muito bem-vindos, mas gostaríamos de ver um toque a mais. Não queremos que nossos familiares e amigos desapareçam atrás de uma “roupa obrigatória”; por isso, nossa sugestão é que você acrescente seu toque único ao look.
+Por exemplo, se você é alguém que só usa All Star, pode vir de terno e All Star; se gosta de meias coloridas, use-as; se não sai de casa sem uma camisa de time, venha com ela por baixo da camisa social, ou mesmo com algum detalhe do time e por aí vai. 
 
-          <Grid item xs={12}>
-            <DetailsCard>
-              <DetailTitle>
-                <EventIcon sx={{ color: '#b22432' }} />
-                Informações Importantes
-              </DetailTitle>
-              <Grid container spacing={4}>
-                <Grid item xs={12} md={6}>
-                  <DetailText>
-                    <strong>Dress Code:</strong> Traje Social Completo
-                  </DetailText>
-                  <DetailText>
-                    <strong>Estacionamento:</strong> Disponível no local
-                  </DetailText>
-                  <DetailText>
-                    <strong>Transporte:</strong> Estacionamento gratuito disponível
-                  </DetailText>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <DetailText>
-                    <strong>Presentes:</strong> Sua presença é nosso maior presente
-                  </DetailText>
-                  <DetailText>
-                    <strong>Fotografia:</strong> Pedimos que não tirem fotos durante a cerimônia
-                  </DetailText>
-                  <DetailText>
-                    <strong>Contato:</strong> Para dúvidas, entre em contato conosco
-                  </DetailText>
-                </Grid>
-              </Grid>
-            </DetailsCard>
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Box display="flex" flexDirection="column" alignItems="center">
+              <Box
+                sx={{
+                  width: { xs: '100%', sm: 240 },
+                  height: { xs: 360, sm: 427 }, // 9:16 aspect ratio to match Chandler image
+                  overflow: 'hidden',
+                  boxShadow: '0 4px 24px rgba(178,36,50,0.07)',
+                  mb: 2,
+                  background: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Swiper
+                  spaceBetween={0}
+                  slidesPerView={1}
+                  loop={true}
+                  navigation={true}
+                  autoplay={{
+                    delay: 3000,
+                    disableOnInteraction: false,
+                  }}
+                  modules={[Navigation, Autoplay]}
+                  style={{ width: '100%', height: '100%' }}
+                >
+                  <SwiperSlide>
+                    <Box
+                      component="img"
+                      src={chandler}
+                      alt="Dress code inspiração Chandler"
+                      sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </SwiperSlide>
+                  <SwiperSlide>
+                    <Box
+                      component="img"
+                      src={theodore}
+                      alt="Dress code inspiração Theodore"
+                      sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </SwiperSlide>
+                  <SwiperSlide>
+                    <Box
+                      component="img"
+                      src={rachel}
+                      alt="Dress code inspiração Rachel"
+                      sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </SwiperSlide>
+                  <SwiperSlide>
+                    <Box
+                      component="img"
+                      src={atonement}
+                      alt="Dress code inspiração Atonement"
+                      sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </SwiperSlide>
+                </Swiper>
+              </Box>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Box display="flex" flexDirection="column" alignItems="center">
+              <Typography align="center" sx={{ color: '#666' }}>
+              Queremos enxergar vocês para além das roupas sociais. Queremos que cada um traga um pouco de si, das pessoas que aprendemos a amar. Só assim a festa ficará completa. Esses pequenos detalhes de personalidade, com certeza, renderão boas fotos e risadas. No fim do dia, as histórias que surgirem na festa serão o que mais importa, o que contaremos no futuro.
+Mas não se preocupe! Se não conseguir pensar em nada, não tem problema. Siga o esporte fino tradicional, talvez com um toque colorido. No mais, venham bonitos, porque nós estaremos lindos e queremos boas fotos!
+
+            </Typography>
+            </Box>
           </Grid>
         </Grid>
       </Container>
@@ -208,4 +163,5 @@ const WeddingDetails: React.FC = () => {
   );
 };
 
-export default WeddingDetails; 
+
+export default WeddingDetails;

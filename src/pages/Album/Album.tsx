@@ -70,7 +70,7 @@ const PageSubtitle = styled(Typography)(({ theme }) => ({
   },
 }));
 
-const PhotoCard = styled(Card)(({ theme }) => ({
+const PhotoCard = styled(Card)({
   position: 'relative',
   borderRadius: '16px',
   overflow: 'hidden',
@@ -84,7 +84,7 @@ const PhotoCard = styled(Card)(({ theme }) => ({
       opacity: 1,
     },
   },
-}));
+});
 
 const PhotoMedia = styled(CardMedia)({
   height: '300px',
@@ -123,14 +123,14 @@ const PhotoDate = styled(Chip)({
   backdropFilter: 'blur(10px)',
 });
 
-const StyledDialog = styled(Dialog)(({ theme }) => ({
+const StyledDialog = styled(Dialog)({
   '& .MuiDialog-paper': {
     backgroundColor: 'transparent',
     boxShadow: 'none',
     maxWidth: '90vw',
     maxHeight: '90vh',
   },
-}));
+});
 
 const DialogImage = styled('img')({
   width: '100%',

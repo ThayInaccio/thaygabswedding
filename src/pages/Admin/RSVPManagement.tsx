@@ -32,9 +32,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CancelIcon from '@mui/icons-material/Cancel';
-import { rsvpService, findGuestByName, updateRsvp } from '../../services/rsvp.service';
+import { rsvpService} from '../../services/rsvp.service';
 import type { Guest } from '../../services/rsvp.service';
 
 // SealsCRM-inspired backgrounds and shadows

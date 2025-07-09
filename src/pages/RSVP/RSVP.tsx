@@ -9,12 +9,14 @@ import {
   CircularProgress,
   Alert,
   Autocomplete,
+  Link,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -222,6 +224,8 @@ const RSVP: React.FC = () => {
   const [rejectionStatus, setRejectionStatus] = useState<{ [key: string]: string }>({});
   const [options, setOptions] = useState<Guest[]>([]);
   const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null);
+  const [animatingConfirm, setAnimatingConfirm] = useState<string | null>(null);
+  const [showCheckOnly, setShowCheckOnly] = useState(false);
 
   // Fetch guest suggestions as user types
   const handleInputChange = async (_event: React.SyntheticEvent, value: string) => {
@@ -259,16 +263,21 @@ const RSVP: React.FC = () => {
   };
 
   const handleConfirm = async (guestId: string) => {
-    setLoading(true);
+    setAnimatingConfirm(guestId);
     setError(null);
-    try {
-      await updateRsvp(guestId, { confirmed: true });
-      setConfirmationStatus(prev => ({ ...prev, [guestId]: 'Confirmado!' }));
-    } catch (err) {
-      setError('Erro ao confirmar presença. Tente novamente.');
-    } finally {
-      setLoading(false);
-    }
+    setLoading(true);
+    setTimeout(async () => {
+      try {
+        await updateRsvp(guestId, { confirmed: true });
+        setConfirmationStatus(prev => ({ ...prev, [guestId]: 'Confirmado!' }));
+        setShowCheckOnly(true);
+      } catch (err) {
+        setError('Erro ao confirmar presença. Tente novamente.');
+      } finally {
+        setLoading(false);
+        setAnimatingConfirm(null);
+      }
+    }, 500);
   };
 
   const handleReject = async (guestId: string) => {
@@ -316,110 +325,157 @@ const RSVP: React.FC = () => {
             Digite seu nome para encontrar seu convite e confirmar sua presença no nosso grande dia.
           </Subtitle>
 
-          <Box component="form" onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
-            <Autocomplete
-              freeSolo={false}
-              options={options}
-              getOptionLabel={(option) => option.name}
-              loading={loading}
-              value={selectedGuest}
-              onChange={(_event, newValue) => setSelectedGuest(newValue)}
-              inputValue={searchTerm}
-              onInputChange={handleInputChange}
-              renderInput={(params) => (
-                <StyledTextField
-                  {...params}
-                  fullWidth
-                  variant="standard"
-                  placeholder="Digite seu nome completo"
+          {showCheckOnly && selectedGuest ? (
+            <Box mt={3} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+              <Typography sx={{ color: '#fff6e7', fontSize: '1.2rem', fontWeight: 500, mb: 2 }}>
+                {selectedGuest.name}
+              </Typography>
+              <motion.div
+                key="check"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0, opacity: 0 }}
+                transition={{ duration: 0.4 }}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <CheckCircleIcon sx={{ color: '#4caf50', fontSize: 48 }} />
+              </motion.div>
+              <Link
+                component="button"
+                underline="hover"
+                sx={{ mt: 3, color: '#e3c095', fontWeight: 400, fontSize: '1rem' }}
+                onClick={() => {
+                  setShowCheckOnly(false);
+                  setSelectedGuest(null);
+                  setSearchTerm('');
+                  setConfirmationStatus({});
+                  setRejectionStatus({});
+                  setError(null);
+                }}
+              >
+                Click aqui para confirmar outro convidado
+              </Link>
+            </Box>
+          ) : (
+            <>
+              <Box component="form" onSubmit={e => e.preventDefault()}>
+                <Autocomplete
+                  freeSolo={false}
+                  options={options}
+                  getOptionLabel={(option) => option.name}
+                  loading={loading}
+                  value={selectedGuest}
+                  onChange={(_event, newValue) => setSelectedGuest(newValue)}
+                  inputValue={searchTerm}
+                  onInputChange={handleInputChange}
+                  renderInput={(params) => (
+                    <StyledTextField
+                      {...params}
+                      fullWidth
+                      variant="standard"
+                      placeholder="Digite seu nome completo"
+                    />
+                  )}
                 />
-              )}
-            />
-            <StyledButton
-              fullWidth
-              variant="contained"
-              type="submit"
-              disabled={loading}
-            >
-              {loading ? <CircularProgress size={24} color="inherit" /> : 'Buscar'}
-            </StyledButton>
-          </Box>
+              </Box>
 
-          {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+              {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
 
-          {foundGuests.length > 0 && (
-            <Box mt={3}>
-              {foundGuests.map((guest, idx) => (
-                <React.Fragment key={guest.id}>
+              {selectedGuest && (
+                <Box mt={3}>
                   <Box display="flex" justifyContent="space-between" alignItems="center" py={1}>
                     <Typography sx={{ color: '#fff6e7', fontSize: '1rem', fontWeight: 400 }}>
-                      {guest.name}
+                      {selectedGuest.name}
                     </Typography>
-                    {guest.confirmed === true ? (
-                      <CheckCircleIcon sx={{ color: '#4caf50', fontSize: 28 }} />
-                    ) : guest.confirmed === false || rejectionStatus[guest.id] === 'Rejeitado' ? (
-                      <CancelIcon sx={{ color: '#f44336', fontSize: 28 }} />
-                    ) : (
-                      <Box display="flex" gap={1}>
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          sx={{
-                            borderRadius: '20px',
-                            borderColor: '#e3c095',
-                            color: '#e3c095',
-                            px: 2,
-                            fontSize: '0.95rem',
-                            fontWeight: 400,
-                            background: 'transparent',
-                            minWidth: 110,
-                            transition: 'all 0.2s',
-                            boxShadow: 'none',
-                            '&:hover': {
-                              borderColor: '#fff6e7',
-                              color: '#fff6e7',
-                              background: 'rgba(255,246,231,0.04)'
-                            }
-                          }}
-                          onClick={() => handleConfirm(guest.id)}
-                          disabled={loading}
+                    <AnimatePresence mode="wait" initial={false}>
+                      {selectedGuest.confirmed === true || (animatingConfirm === selectedGuest.id && confirmationStatus[selectedGuest.id]) ? (
+                        <motion.div
+                          key="check"
+                          initial={{ scale: 0, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          exit={{ scale: 0, opacity: 0 }}
+                          transition={{ duration: 0.4 }}
+                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
                         >
-                          {confirmationStatus[guest.id] || 'Confirmar'}
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          sx={{
-                            borderRadius: '20px',
-                            borderColor: '#e3c095',
-                            color: '#e3c095',
-                            px: 2,
-                            fontSize: '0.95rem',
-                            fontWeight: 400,
-                            background: 'transparent',
-                            minWidth: 110,
-                            transition: 'all 0.2s',
-                            boxShadow: 'none',
-                            '&:hover': {
-                              borderColor: '#f44336',
-                              color: '#f44336',
-                              background: 'rgba(244,67,54,0.04)'
-                            }
-                          }}
-                          onClick={() => handleReject(guest.id)}
-                          disabled={loading}
+                          <CheckCircleIcon sx={{ color: '#4caf50', fontSize: 28 }} />
+                        </motion.div>
+                      ) : selectedGuest.confirmed === false || rejectionStatus[selectedGuest.id] === 'Rejeitado' ? (
+                        <motion.div
+                          key="cancel"
+                          initial={{ scale: 0, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          exit={{ scale: 0, opacity: 0 }}
+                          transition={{ duration: 0.4 }}
+                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
                         >
-                          {rejectionStatus[guest.id] || 'Rejeitar'}
-                        </Button>
-                      </Box>
-                    )}
+                          <CancelIcon sx={{ color: '#f44336', fontSize: 28 }} />
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="buttons"
+                          initial={{ opacity: 0, x: 40 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -40 }}
+                          transition={{ duration: 0.4 }}
+                          style={{ display: 'flex', gap: 8 }}
+                        >
+                          <Button
+                            variant="outlined"
+                            size="small"
+                            sx={{
+                              borderRadius: '20px',
+                              borderColor: '#e3c095',
+                              color: '#e3c095',
+                              px: 2,
+                              fontSize: '0.95rem',
+                              fontWeight: 400,
+                              background: 'transparent',
+                              minWidth: 110,
+                              transition: 'all 0.2s',
+                              boxShadow: 'none',
+                              '&:hover': {
+                                borderColor: '#fff6e7',
+                                color: '#fff6e7',
+                                background: 'rgba(255,246,231,0.04)'
+                              }
+                            }}
+                            onClick={() => handleReject(selectedGuest.id)}
+                            disabled={loading}
+                          >
+                            {rejectionStatus[selectedGuest.id] || 'Não vou'}
+                          </Button>
+                          <Button
+                            variant="outlined"
+                            size="small"
+                            sx={{
+                              borderRadius: '20px',
+                              borderColor: '#e3c095',
+                              color: '#e3c095',
+                              px: 2,
+                              fontSize: '0.95rem',
+                              fontWeight: 400,
+                              background: 'transparent',
+                              minWidth: 110,
+                              transition: 'all 0.2s',
+                              boxShadow: 'none',
+                              '&:hover': {
+                                borderColor: '#fff6e7',
+                                color: '#fff6e7',
+                                background: 'rgba(255,246,231,0.04)'
+                              }
+                            }}
+                            onClick={() => handleConfirm(selectedGuest.id)}
+                            disabled={loading || animatingConfirm === selectedGuest.id}
+                          >
+                            {confirmationStatus[selectedGuest.id] || 'Vou'}
+                          </Button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </Box>
-                  {idx < foundGuests.length - 1 && (
-                    <Box height={1} bgcolor="#e3c095" sx={{ opacity: 0.12 }} my={0.5} borderRadius={1} />
-                  )}
-                </React.Fragment>
-              ))}
-            </Box>
+                </Box>
+              )}
+            </>
           )}
         </RSVPFormCard>
       </RSVPContainer>
