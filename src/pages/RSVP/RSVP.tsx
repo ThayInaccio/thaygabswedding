@@ -30,10 +30,10 @@ export interface Guest {
 }
 
 const videos = [
-  '/src/assets/videos/bs-pb2.mp4',
-  '/src/assets/videos/ah-pb.mp4',
-  '/src/assets/videos/bs-pb1.mp4',
-  '/src/assets/videos/at-pb.mp4',
+  '/videos/bs-pb2.mp4',
+  '/videos/ah-pb.mp4',
+  '/videos/bs-pb1.mp4',
+  '/videos/at-pb.mp4',
 
 ];
 
