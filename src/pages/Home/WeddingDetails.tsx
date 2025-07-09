@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   Typography,
   Container,
-  Chip,
   Grid,
-  Paper,
-  Avatar,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Swiper, SwiperSlide } from 'swiper/react';

@@ -1,7 +1,6 @@
 import React from 'react';
-import { Box, Typography, Button, Container, Grid, ImageList, ImageListItem } from '@mui/material';
+import { Box, Typography, Container, Grid, ImageList, ImageListItem } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
 import pb1 from '../../assets/couple/pb1.png';
 import pb2 from '../../assets/couple/pb2.png';
 import pb3 from '../../assets/couple/pb3.png';
@@ -38,27 +37,6 @@ const Title = styled(Typography)(({ theme }) => ({
   },
 }));
 
-const AlbumButton = styled(Button)(() => ({
-  borderRadius: '30px',
-  border: '1px solid #b71c1c',
-  color: '#b71c1c',
-  padding: '0.3rem 1.5rem',
-  textTransform: 'none',
-  fontFamily: "'Montserrat', sans-serif",
-  fontWeight: 400,
-  fontSize: '1rem',
-  marginBottom: '2.5rem',
-  marginTop: '0.5rem',
-  background: 'transparent',
-  boxShadow: 'none',
-  '&:hover': {
-    background: 'rgba(183, 28, 28, 0.04)',
-    borderColor: '#8B0000',
-    color: '#8B0000',
-    boxShadow: 'none',
-  },
-}));
-
 const IndentedColumn = styled(Box)(({ theme }) => ({
   paddingLeft: '7vw',
   [theme.breakpoints.down('md')]: {
@@ -68,22 +46,6 @@ const IndentedColumn = styled(Box)(({ theme }) => ({
 
 const TextBlock = styled(Box)(() => ({
   maxWidth: 420,
-}));
-
-const SectionTitle = styled(Typography)(() => ({
-  fontFamily: "'Montserrat', sans-serif",
-  fontWeight: 500,
-  fontSize: '1.5rem',
-  marginBottom: '0.5rem',
-  color: '#000',
-}));
-
-const SectionTitleSmall = styled(Typography)(() => ({
-  fontFamily: "'Montserrat', sans-serif",
-  fontWeight: 400,
-  fontSize: '1.3rem',
-  marginBottom: '0.5rem',
-  color: '#000',
 }));
 
 const BodyText = styled(Typography)(() => ({
@@ -137,11 +99,6 @@ const StyledImageList = styled(ImageList)(() => ({
 }));
 
 const About: React.FC = () => {
-  const navigate = useNavigate();
-
-  const handleAlbumClick = () => {
-    navigate('/album');
-  };
 
   return (
     <AboutSection id="about">
@@ -194,15 +151,6 @@ const About: React.FC = () => {
     </AboutSection>
   );
 };
-
-function srcset(image: string, size: number, rows = 1, cols = 1) {
-  return {
-    src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
-    srcSet: `${image}?w=${size * cols}&h=${
-      size * rows
-    }&fit=crop&auto=format&dpr=2 2x`,
-  };
-}
 
 const itemData = [
   {

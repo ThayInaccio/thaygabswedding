@@ -16,12 +16,10 @@ import { styled } from '@mui/material/styles';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import HomeIcon from '@mui/icons-material/Home';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import EventIcon from '@mui/icons-material/Event';
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 import RsvpIcon from '@mui/icons-material/Rsvp';
-import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 const StyledAppBar = styled(AppBar)<{ $shouldShowDropdown: boolean }>(({ $shouldShowDropdown }) => ({

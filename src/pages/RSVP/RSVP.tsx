@@ -6,7 +6,6 @@ import {
   Button,
   Container,
   Paper,
-  CircularProgress,
   Alert,
   Autocomplete,
   Link,
@@ -190,34 +189,8 @@ const StyledTextField = styled(TextField)(() => ({
   },
 }));
 
-const StyledButton = styled(Button)(() => ({
-  borderRadius: '30px',
-  padding: '0.75rem 2rem',
-  fontFamily: "'Inter', sans-serif",
-  fontWeight: 400,
-  textTransform: 'uppercase',
-  fontSize: '0.8rem',
-  letterSpacing: '0.15em',
-  marginTop: '1.5rem',
-  boxShadow: 'none',
-  border: '1px solid rgba(255, 246, 231, 0.5)',
-  color: '#fff6e7',
-  background: 'transparent',
-  transition: 'all 0.3s ease',
-  '&:hover': {
-    background: 'rgba(255, 246, 231, 0.05)',
-    borderColor: '#fff6e7',
-  },
-  '&.Mui-disabled': {
-    borderColor: 'rgba(255, 246, 231, 0.2)',
-    color: 'rgba(255, 246, 231, 0.3)',
-    background: 'transparent',
-  },
-}));
-
 const RSVP: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [foundGuests, setFoundGuests] = useState<Guest[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmationStatus, setConfirmationStatus] = useState<{ [key: string]: string }>({});
@@ -240,23 +213,6 @@ const RSVP: React.FC = () => {
       setOptions(guests);
     } catch {
       setOptions([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSearch = async () => {
-    if (!selectedGuest) {
-      setError('Por favor, selecione seu nome na lista.');
-      return;
-    }
-    setLoading(true);
-    setError(null);
-    setFoundGuests([]);
-    try {
-      setFoundGuests([selectedGuest]);
-    } catch {
-      setError('Erro ao buscar convidado. Tente novamente.');
     } finally {
       setLoading(false);
     }
