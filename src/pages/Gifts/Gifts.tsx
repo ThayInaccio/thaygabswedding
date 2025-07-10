@@ -19,8 +19,6 @@ import {
   IconButton,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import CloseIcon from '@mui/icons-material/Close';
 import * as giftService from '../../services/gifts.service';
@@ -30,10 +28,15 @@ import Autocomplete from '@mui/lab/Autocomplete';
 import TextField from '@mui/material/TextField';
 import { Guest, findGuestByName } from '../../services/rsvp.service';
 import { registerPurchase } from '../../services/api';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import { Global } from '@emotion/react';
 
 const GiftsSection = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
-  background: 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)',
+  background: 'repeating-linear-gradient(to right, #f8d3db 0px, #f8d3db 16px, #fff 16px, #fff 40px)',
   padding: '6rem 0 4rem 0',
   [theme.breakpoints.down('md')]: {
     padding: '4rem 0 2rem 0',
@@ -41,9 +44,9 @@ const GiftsSection = styled(Box)(({ theme }) => ({
 }));
 
 const PageTitle = styled(Typography)(({ theme }) => ({
-  fontFamily: "'Great Vibes', cursive",
+  fontFamily: "'Operetta 12 Demi Bold', serif",
   fontSize: '3.5rem',
-  fontWeight: 400,
+  fontWeight: 600,
   textAlign: 'center',
   color: '#8B0000',
   marginBottom: '1rem',
@@ -60,12 +63,12 @@ const PageSubtitle = styled(Typography)(({ theme }) => ({
   fontFamily: "'Montserrat', sans-serif",
   fontSize: '1.1rem',
   textAlign: 'center',
-  color: '#666',
+  color: '#000000',
   marginBottom: '4rem',
   maxWidth: '700px',
   margin: '0 auto 4rem',
   lineHeight: 1.6,
-  fontWeight: 300,
+  fontWeight: 400,
   [theme.breakpoints.down('md')]: {
     fontSize: '1rem',
     marginBottom: '3rem',
@@ -75,20 +78,31 @@ const PageSubtitle = styled(Typography)(({ theme }) => ({
 const GiftCard = styled(Card)({
   position: 'relative',
   borderRadius: '16px',
-  overflow: 'hidden',
-  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-  height: '100%',
+  overflow: 'visible', // allow shadow and scale to show
+  boxShadow: '0 2px 8px rgba(178,36,50,0.07)',
+  transition: 'transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+  width: '270px',
+  height: '410px',
   display: 'flex',
   flexDirection: 'column',
+  background: '#fff',
+  transform: 'scale(1)',
+  willChange: 'transform',
   '&:hover': {
-    transform: 'translateY(-8px) scale(1.02)',
-    boxShadow: '0 20px 40px rgba(139, 0, 0, 0.15)',
+    transform: 'scale(1.07)',
+    boxShadow: '0 12px 32px rgba(178,36,50,0.13)',
+    zIndex: 2,
+  },
+  '.swiper-slide-active &': {
+    transform: 'scale(1.12)',
+    zIndex: 3,
+    boxShadow: '0 16px 40px rgba(178,36,50,0.16)',
+    borderRadius: '16px', // always keep rounded
   },
 });
 
 const GiftMedia = styled(CardMedia)({
-  height: '200px',
+  height: '160px', // fixed image height
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   position: 'relative',
@@ -98,7 +112,9 @@ const GiftContent = styled(CardContent)({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
-  padding: '1.5rem',
+  padding: '1.2rem',
+  minHeight: 0,
+  justifyContent: 'space-between',
 });
 
 const GiftTitle = styled(Typography)({
@@ -108,6 +124,9 @@ const GiftTitle = styled(Typography)({
   color: '#333',
   marginBottom: '0.5rem',
   lineHeight: 1.3,
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
 });
 
 const GiftDescription = styled(Typography)({
@@ -117,6 +136,11 @@ const GiftDescription = styled(Typography)({
   marginBottom: '1rem',
   lineHeight: 1.5,
   flex: 1,
+  overflow: 'hidden',
+  display: '-webkit-box',
+  WebkitLineClamp: 3,
+  WebkitBoxOrient: 'vertical',
+  textOverflow: 'ellipsis',
 });
 
 const GiftPrice = styled(Typography)({
@@ -320,6 +344,12 @@ const HeartCelebration = () => {
   );
 };
 
+const StyledSwiperSlide = styled(SwiperSlide)({
+  overflow: 'visible',
+  display: 'flex',
+  justifyContent: 'center',
+});
+
 const Gifts: React.FC = () => {
   const [gifts, setGifts] = useState<Gift[]>([]);
   const [loading, setLoading] = useState(true);
@@ -456,17 +486,29 @@ const Gifts: React.FC = () => {
         <Fade in timeout={800}>
           <Box>
             <PageTitle>
-              Lista de Presentes
+              Presentes em cartaz
             </PageTitle>
             <PageSubtitle>
-              Sua presença é nosso maior presente, mas se desejar nos presentear, 
-              aqui estão algumas sugestões que nos deixariam muito felizes. 
-              Cada item foi escolhido com carinho para construir nossa nova vida juntos.
+            Compre ingresso do filme que você gostaria de assistir
             </PageSubtitle>
 
-            <Grid container spacing={3}>
+            <Swiper
+              modules={[Navigation]}
+              navigation
+              centeredSlides
+              loop
+              slidesPerView={3}
+              style={{ padding: '2rem 0', overflow: 'visible' }}
+              breakpoints={{
+                0: { slidesPerView: 1 },
+                600: { slidesPerView: 1.5 },
+                900: { slidesPerView: 2.5 },
+                1200: { slidesPerView: 3 },
+              }}
+              className="gift-swiper"
+            >
               {gifts.map((gift, index) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={gift.id}>
+                <StyledSwiperSlide key={gift.id}>
                   <Fade in timeout={800 + index * 100}>
                     <GiftCard>
                       <Box sx={{ position: 'relative' }}>
@@ -475,25 +517,7 @@ const Gifts: React.FC = () => {
                           title={gift.name}
                         />
                         {getStatusChip(gift)}
-                        <FavoriteButton
-                          onClick={() => toggleFavorite(gift.id)}
-                          size="small"
-                          sx={{
-                            position: 'absolute',
-                            top: '12px',
-                            left: '12px',
-                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                            backdropFilter: 'blur(10px)',
-                          }}
-                        >
-                          {favorites.has(gift.id) ? (
-                            <FavoriteIcon sx={{ color: '#8B0000' }} />
-                          ) : (
-                            <FavoriteBorderIcon sx={{ color: '#666' }} />
-                          )}
-                        </FavoriteButton>
                       </Box>
-                      
                       <GiftContent>
                         <GiftTitle variant="h6">
                           {gift.name}
@@ -504,7 +528,6 @@ const Gifts: React.FC = () => {
                         <GiftPrice>
                           {formatPrice(gift.price)}
                         </GiftPrice>
-                        
                         <GiftActions>
                           <StyledButton
                             variant="outlined"
@@ -518,9 +541,9 @@ const Gifts: React.FC = () => {
                       </GiftContent>
                     </GiftCard>
                   </Fade>
-                </Grid>
+                </StyledSwiperSlide>
               ))}
-            </Grid>
+            </Swiper>
             {/* Buy Dialog */}
             <StyledDialog open={buyDialogOpen} onClose={handleBuyDialogClose}>
               <DialogTitle sx={{
@@ -611,6 +634,26 @@ const Gifts: React.FC = () => {
           </Box>
         </Fade>
       </Container>
+      <Global styles={`
+        .gift-swiper .swiper-slide {
+          transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s, opacity 0.4s;
+          opacity: 0.6;
+          transform: scale(0.85);
+          z-index: 1;
+        }
+        .gift-swiper .swiper-slide-active {
+          opacity: 1;
+          transform: scale(1.08);
+          z-index: 3;
+          box-shadow: 0 12px 32px rgba(178,36,50,0.13);
+        }
+        .gift-swiper .swiper-slide-next,
+        .gift-swiper .swiper-slide-prev {
+          opacity: 0.85;
+          transform: scale(0.95);
+          z-index: 2;
+        }
+      `} />
     </GiftsSection>
   );
 };

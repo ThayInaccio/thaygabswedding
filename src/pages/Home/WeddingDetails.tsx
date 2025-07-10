@@ -66,11 +66,8 @@ const WeddingDetails: React.FC = () => {
     <WeddingSection id="wedding-details">
       <Container maxWidth="lg">
         <Title>
-          Sobre o Casamento
+          Dress Code
         </Title>
-        <Subtitle>
-          Junte-se a nós para celebrar este momento especial em nossas vidas
-        </Subtitle>
 
         <Grid container spacing={4} alignItems="center" justifyContent="center">
           <Grid item xs={12} md={4}>
