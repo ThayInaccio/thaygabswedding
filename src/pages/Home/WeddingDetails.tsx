@@ -42,24 +42,6 @@ const Title = styled(Typography)(({ theme }) => ({
   },
 }));
 
-const Subtitle = styled(Typography)(({ theme }) => ({
-  textAlign: 'center',
-  fontFamily: "'Montserrat', sans-serif",
-  fontSize: '1rem',
-  color: '#888',
-  marginBottom: '5rem',
-  maxWidth: '500px',
-  margin: '0 auto 5rem',
-  lineHeight: 1.6,
-  fontWeight: 300,
-  letterSpacing: '0.5px',
-  [theme.breakpoints.down('md')]: {
-    fontSize: '0.9rem',
-    marginBottom: '4rem',
-  },
-}));
-
-
 const WeddingDetails: React.FC = () => {
 
   return (

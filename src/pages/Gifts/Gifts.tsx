@@ -3,7 +3,6 @@ import {
   Box,
   Typography,
   Container,
-  Grid,
   Card,
   CardContent,
   CardMedia,
@@ -174,14 +173,6 @@ const StyledButton = styled(Button)({
   },
 });
 
-const FavoriteButton = styled(IconButton)({
-  color: '#8B0000',
-  padding: '0.5rem',
-  '&:hover': {
-    backgroundColor: 'rgba(139, 0, 0, 0.1)',
-  },
-});
-
 const StatusChip = styled(Chip)({
   position: 'absolute',
   top: '12px',
@@ -283,7 +274,7 @@ const HeartCelebration = () => {
           user-select: none;
           will-change: transform, opacity;
         }
-        .iara {
+        .iara {favorites
           position: absolute;
           animation: iara-float 2.4s ease-in forwards;
           user-select: none;
@@ -354,7 +345,6 @@ const Gifts: React.FC = () => {
   const [gifts, setGifts] = useState<Gift[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [buyDialogOpen, setBuyDialogOpen] = useState(false);
   const [buyGift, setBuyGift] = useState<Gift | null>(null);
   const [showCelebration, setShowCelebration] = useState(false);
@@ -416,18 +406,6 @@ const Gifts: React.FC = () => {
     } catch (err: any) {
       setGuestError(err.message || 'Erro ao registrar compra');
     }
-  };
-
-  const toggleFavorite = (giftId: string) => {
-    setFavorites(prev => {
-      const newFavorites = new Set(prev);
-      if (newFavorites.has(giftId)) {
-        newFavorites.delete(giftId);
-      } else {
-        newFavorites.add(giftId);
-      }
-      return newFavorites;
-    });
   };
 
   const formatPrice = (price: number) => {
