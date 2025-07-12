@@ -35,7 +35,9 @@ import { Global } from '@emotion/react';
 
 const GiftsSection = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
-  background: 'repeating-linear-gradient(to right, #f8d3db 0px, #f8d3db 16px, #fff 16px, #fff 40px)',
+  background: `#d6a5ad`,
+  border: '18px solid transparent',
+  boxSizing: 'border-box',
   padding: '6rem 0 4rem 0',
   [theme.breakpoints.down('md')]: {
     padding: '4rem 0 2rem 0',
@@ -47,9 +49,10 @@ const PageTitle = styled(Typography)(({ theme }) => ({
   fontSize: '3.5rem',
   fontWeight: 600,
   textAlign: 'center',
-  color: '#8B0000',
+  color: '#e0d5bb',
   marginBottom: '1rem',
   letterSpacing: '-0.02em',
+  textShadow: '0 2px 12px rgba(0,0,0,0.32), 0 1px 0 #000',
   [theme.breakpoints.down('md')]: {
     fontSize: '2.5rem',
   },
@@ -62,12 +65,13 @@ const PageSubtitle = styled(Typography)(({ theme }) => ({
   fontFamily: "'Montserrat', sans-serif",
   fontSize: '1.1rem',
   textAlign: 'center',
-  color: '#000000',
+  color: '#e0d5bb',
   marginBottom: '4rem',
   maxWidth: '700px',
   margin: '0 auto 4rem',
   lineHeight: 1.6,
-  fontWeight: 400,
+  fontWeight: 600,
+  textShadow: '0 2px 8px rgba(0,0,0,0.22)',
   [theme.breakpoints.down('md')]: {
     fontSize: '1rem',
     marginBottom: '3rem',
@@ -76,42 +80,32 @@ const PageSubtitle = styled(Typography)(({ theme }) => ({
 
 const GiftCard = styled(Card)({
   position: 'relative',
-  borderRadius: '16px',
-  overflow: 'visible', // allow shadow and scale to show
-  boxShadow: '0 2px 8px rgba(178,36,50,0.07)',
-  transition: 'transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
-  width: '270px',
-  height: '410px',
+  borderRadius: '20px',
+  overflow: 'hidden',
+  boxShadow: '0 2px 12px rgba(100, 38, 27, 0.10)',
+  background: '#fff',
+  width: '300px',
+  minHeight: '430px',
   display: 'flex',
   flexDirection: 'column',
-  background: '#fff',
-  transform: 'scale(1)',
-  willChange: 'transform',
-  '&:hover': {
-    transform: 'scale(1.07)',
-    boxShadow: '0 12px 32px rgba(178,36,50,0.13)',
-    zIndex: 2,
-  },
-  '.swiper-slide-active &': {
-    transform: 'scale(1.12)',
-    zIndex: 3,
-    boxShadow: '0 16px 40px rgba(178,36,50,0.16)',
-    borderRadius: '16px', // always keep rounded
-  },
+  transition: 'box-shadow 0.4s, border 0.4s, transform 0.4s cubic-bezier(0.4,0,0.2,1)',
 });
 
 const GiftMedia = styled(CardMedia)({
-  height: '160px', // fixed image height
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  position: 'relative',
+  width: '100%',
+  height: '170px',
+  objectFit: 'cover',
+  borderTopLeftRadius: '20px',
+  borderTopRightRadius: '20px',
+  borderBottomLeftRadius: 0,
+  borderBottomRightRadius: 0,
 });
 
 const GiftContent = styled(CardContent)({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
-  padding: '1.2rem',
+  padding: '1.4rem',
   minHeight: 0,
   justifyContent: 'space-between',
 });
@@ -123,9 +117,7 @@ const GiftTitle = styled(Typography)({
   color: '#333',
   marginBottom: '0.5rem',
   lineHeight: 1.3,
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
+  // Remove ellipsis
 });
 
 const GiftDescription = styled(Typography)({
@@ -135,11 +127,7 @@ const GiftDescription = styled(Typography)({
   marginBottom: '1rem',
   lineHeight: 1.5,
   flex: 1,
-  overflow: 'hidden',
-  display: '-webkit-box',
-  WebkitLineClamp: 3,
-  WebkitBoxOrient: 'vertical',
-  textOverflow: 'ellipsis',
+  // Remove ellipsis and line clamp
 });
 
 const GiftPrice = styled(Typography)({
@@ -338,7 +326,9 @@ const HeartCelebration = () => {
 const StyledSwiperSlide = styled(SwiperSlide)({
   overflow: 'visible',
   display: 'flex',
-  justifyContent: 'center',
+  flexDirection: 'column',
+  alignItems: 'center',
+  height: '100%',
 });
 
 const Gifts: React.FC = () => {
@@ -616,20 +606,22 @@ const Gifts: React.FC = () => {
         .gift-swiper .swiper-slide {
           transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s, opacity 0.4s;
           opacity: 0.6;
-          transform: scale(0.85);
+          transform: scale(0.92);
           z-index: 1;
         }
         .gift-swiper .swiper-slide-active {
           opacity: 1;
-          transform: scale(1.08);
-          z-index: 3;
-          box-shadow: 0 12px 32px rgba(178,36,50,0.13);
+          transform: scale(1.10) translateY(-10px);
+          z-index: 4;
         }
         .gift-swiper .swiper-slide-next,
         .gift-swiper .swiper-slide-prev {
           opacity: 0.85;
-          transform: scale(0.95);
+          transform: scale(0.98);
           z-index: 2;
+        }
+        .gift-swiper {
+          padding-bottom: 2.5rem !important;
         }
       `} />
     </GiftsSection>
