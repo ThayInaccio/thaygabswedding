@@ -208,10 +208,6 @@ const ErrorContainer = styled(Box)({
   minHeight: '400px',
   gap: '1rem',
 });
-
-const NUBANK_PIX_PAYLOAD = "00020126490014BR.GOV.BCB.PIX0127casamentothaygabs@gmail.com5204000053039865802BR5923Gabriel Campos Ferreira6009SAO PAULO62140510miThpoFX8H6304CAA1";
-const NUBANK_PIX_LINK = "https://nubank.com.br/cobrar/q6ii6/686a78f7-dd6e-43d7-8e8c-8faafe23c22a";
-
 // Heart and Iara animation component
 const HeartCelebration = () => {
   // Generate many random positions and delays for hearts and iaras
