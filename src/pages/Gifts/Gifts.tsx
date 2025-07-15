@@ -342,6 +342,7 @@ const Gifts: React.FC = () => {
   const [guestError, setGuestError] = useState('');
   const [guestOptions, setGuestOptions] = useState<Guest[]>([]);
   const [guestLoading, setGuestLoading] = useState(false);
+  const [step, setStep] = useState(1); // Novo estado para controlar a etapa do modal
 
   useEffect(() => {
     loadGifts();
@@ -366,7 +367,7 @@ const Gifts: React.FC = () => {
     setBuyDialogOpen(true);
     setSelectedGuest(null);
     setGuestError('');
-    // Pix payload generation removed
+    setStep(1); // Sempre começa na etapa 1
   };
 
   const handleBuyDialogClose = () => {
@@ -374,6 +375,20 @@ const Gifts: React.FC = () => {
     setBuyGift(null);
     setSelectedGuest(null);
     setGuestError('');
+    setStep(1);
+  };
+
+  const handleNextStep = () => {
+    if (!selectedGuest) {
+      setGuestError('Selecione seu nome na lista de convidados');
+      return;
+    }
+    setGuestError('');
+    setStep(2);
+  };
+
+  const handlePrevStep = () => {
+    setStep(1);
   };
 
   const handleBuySubmit = async () => {
@@ -529,7 +544,7 @@ const Gifts: React.FC = () => {
                 display: 'flex', flexDirection: 'column', alignItems: 'center',
                 background: 'transparent',
               }}>
-                {buyGift && (
+                {buyGift && step === 1 && (
                   <>
                     <CardMedia
                       component="img"
@@ -572,30 +587,43 @@ const Gifts: React.FC = () => {
                         isOptionEqualToValue={(option, value) => option.id === value.id}
                       />
                     </Box>
+                  </>
+                )}
+                {buyGift && step === 2 && (
+                  <>
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: '#8B0000', mb: 2, fontFamily: 'Montserrat, sans-serif', fontSize: '1.1rem', textAlign: 'center' }}>
+                      Dados para pagamento
+                    </Typography>
                     <Box sx={{ textAlign: 'center', mb: 2, width: '100%' }}>
                       <Typography variant="body2" sx={{ mb: 1, color: '#444', fontFamily: 'Montserrat, sans-serif', fontWeight: 500 }}>Pagamento via Pix</Typography>
-                      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#fafafa', p: 2, borderRadius: 3, boxShadow: '0 1px 8px rgba(0,0,0,0.04)' }}>
-                        <QRCode value={NUBANK_PIX_PAYLOAD} size={120} title="Pix QR Code" />
-                      </Box>
-                      <Typography variant="caption" sx={{ display: 'block', mt: 1, color: '#888', fontFamily: 'Montserrat, sans-serif' }}>
-                        Chave Pix: <b style={{ color: '#8B0000' }}>casamentothaygabs@gmail.com</b>
-                      </Typography>
-                      <Box sx={{ mt: 2, p: 1, background: '#f5f5f5', borderRadius: 2 }}>
-                        <Typography variant="caption" sx={{ fontWeight: 600, color: '#8B0000', fontFamily: 'Montserrat, sans-serif' }}>Copia e cola Pix:</Typography>
-                        <Box sx={{ wordBreak: 'break-all', fontSize: 12, mt: 0.5, color: '#444', fontFamily: 'Montserrat, sans-serif' }}>{NUBANK_PIX_PAYLOAD}</Box>
-                      </Box>
-                      <Box sx={{ mt: 2 }}>
-                        <a href={NUBANK_PIX_LINK} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-                          <Button variant="outlined" sx={{ borderRadius: 20, color: '#8B0000', borderColor: '#8B0000', fontWeight: 500, fontFamily: 'Montserrat, sans-serif', px: 3, py: 1, textTransform: 'none', background: 'transparent', '&:hover': { background: '#8B0000', color: '#fff' } }}>Pagar pelo site do Nubank</Button>
-                        </a>
-                      </Box>
+                      {buyGift.pix_code ? (
+                        <>
+                          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#fafafa', p: 2, borderRadius: 3, boxShadow: '0 1px 8px rgba(0,0,0,0.04)' }}>
+                            <QRCode value={buyGift.pix_code} size={120} title="Pix QR Code" />
+                          </Box>
+                          <Box sx={{ mt: 2, p: 1, background: '#f5f5f5', borderRadius: 2 }}>
+                            <Typography variant="caption" sx={{ fontWeight: 600, color: '#8B0000', fontFamily: 'Montserrat, sans-serif' }}>Copia e cola Pix:</Typography>
+                            <Box sx={{ wordBreak: 'break-all', fontSize: 12, mt: 0.5, color: '#444', fontFamily: 'Montserrat, sans-serif' }}>{buyGift.pix_code}</Box>
+                          </Box>
+                        </>
+                      ) : (
+                        <Alert severity="warning" sx={{ mt: 2 }}>Este presente ainda não possui código Pix cadastrado.</Alert>
+                      )}
                     </Box>
                   </>
                 )}
               </DialogContent>
               <DialogActions sx={{ justifyContent: 'center', p: '1.5rem', background: 'transparent' }}>
                 <Button onClick={handleBuyDialogClose} sx={{ borderRadius: 20, color: '#888', fontWeight: 500, fontFamily: 'Montserrat, sans-serif', px: 3, py: 1, textTransform: 'none', background: 'transparent', boxShadow: 'none', border: 'none', '&:hover': { background: '#f5f5f5' } }}>Cancelar</Button>
-                <Button onClick={handleBuySubmit} variant="contained" sx={{ borderRadius: 20, background: '#8B0000', color: '#fff', fontWeight: 600, fontFamily: 'Montserrat, sans-serif', px: 3, py: 1, textTransform: 'none', boxShadow: 'none', '&:hover': { background: '#600000' } }}>Confirmar</Button>
+                {step === 1 && (
+                  <Button onClick={handleNextStep} variant="contained" sx={{ borderRadius: 20, background: '#8B0000', color: '#fff', fontWeight: 600, fontFamily: 'Montserrat, sans-serif', px: 3, py: 1, textTransform: 'none', boxShadow: 'none', '&:hover': { background: '#600000' } }}>Próximo</Button>
+                )}
+                {step === 2 && (
+                  <>
+                    <Button onClick={handlePrevStep} sx={{ borderRadius: 20, color: '#888', fontWeight: 500, fontFamily: 'Montserrat, sans-serif', px: 3, py: 1, textTransform: 'none', background: 'transparent', boxShadow: 'none', border: 'none', '&:hover': { background: '#f5f5f5' } }}>Voltar</Button>
+                    <Button onClick={handleBuySubmit} variant="contained" sx={{ borderRadius: 20, background: '#8B0000', color: '#fff', fontWeight: 600, fontFamily: 'Montserrat, sans-serif', px: 3, py: 1, textTransform: 'none', boxShadow: 'none', '&:hover': { background: '#600000' } }}>Confirmar</Button>
+                  </>
+                )}
               </DialogActions>
             </StyledDialog>
             {showCelebration && <HeartCelebration />}

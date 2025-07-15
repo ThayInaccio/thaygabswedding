@@ -3,7 +3,7 @@ import { GiftModel } from '../models/gift.model';
 
 export const createGift = async (req: Request, res: Response) => {
   try {
-    const { name, description, price, image_url } = req.body;
+    const { name, description, price, image_url, pix_code } = req.body;
 
     // Validate required fields
     if (!name || !description || !price) {
@@ -18,7 +18,8 @@ export const createGift = async (req: Request, res: Response) => {
       description,
       price: parseFloat(price),
       image_url: image_url || '',
-      is_reserved: false
+      is_reserved: false,
+      pix_code: pix_code || null
     });
 
     res.status(201).json({
@@ -80,6 +81,11 @@ export const updateGift = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
+
+    // Ensure pix_code is passed if present
+    if (typeof updateData.pix_code === 'undefined' && typeof req.body.pix_code !== 'undefined') {
+      updateData.pix_code = req.body.pix_code;
+    }
 
     const gift = await GiftModel.update(id, updateData);
     

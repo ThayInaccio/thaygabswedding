@@ -618,6 +618,14 @@ const GiftManagement: React.FC = () => {
             onChange={(e) => setEditForm({ ...editForm, price: parseFloat(e.target.value) })}
             margin="normal"
           />
+          <StyledTextField
+            fullWidth
+            label="Código Pix"
+            value={editForm.pix_code || ''}
+            onChange={(e) => setEditForm({ ...editForm, pix_code: e.target.value })}
+            margin="normal"
+            helperText="Cole aqui o código Pix (copia e cola) deste presente"
+          />
           
           {/* Image Upload Section */}
           <Box sx={{ mt: 2 }}>
@@ -795,6 +803,14 @@ const GiftManagement: React.FC = () => {
             margin="normal"
             required
             inputProps={{ min: 0, step: 0.01 }}
+          />
+          <StyledTextField
+            fullWidth
+            label="Código Pix"
+            value={addForm.pix_code || ''}
+            onChange={(e) => setAddForm({ ...addForm, pix_code: e.target.value })}
+            margin="normal"
+            helperText="Cole aqui o código Pix (copia e cola) deste presente"
           />
           
           {/* Image Upload Section */}

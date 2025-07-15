@@ -276,9 +276,9 @@ const RSVP: React.FC = () => {
 
       <RSVPContainer>
         <RSVPFormCard>
-          <Title>Garanta seu ingresso</Title>
+          <Title>Confirme sua presença</Title>
           <Subtitle>
-            Digite seu nome para encontrar seu convite e confirmar sua presença no nosso grande dia.
+            Digite seu nome para confirmar sua presença.
           </Subtitle>
 
           {showCheckOnly && selectedGuest ? (

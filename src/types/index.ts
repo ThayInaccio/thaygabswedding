@@ -20,6 +20,7 @@ export interface Gift {
   reserved_at?: Date;
   created_at?: Date;
   status?: 'available' | 'reserved' | 'purchased';
+  pix_code?: string;
 }
 
 export interface ApiResponse<T> {

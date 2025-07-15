@@ -11,14 +11,15 @@ export interface Gift {
   reserved_by?: string;
   reserved_at?: Date;
   created_at: Date;
+  pix_code?: string;
 }
 
 export class GiftModel {
   static async create(giftData: Omit<Gift, 'id' | 'created_at'>): Promise<Gift> {
     const id = uuidv4();
     const query = `
-      INSERT INTO gifts (id, name, description, price, image_url, is_reserved, reserved_by, reserved_at)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      INSERT INTO gifts (id, name, description, price, image_url, is_reserved, reserved_by, reserved_at, pix_code)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
       RETURNING *
     `;
     
@@ -31,6 +32,7 @@ export class GiftModel {
       giftData.is_reserved,
       giftData.reserved_by || null,
       giftData.reserved_at || null,
+      giftData.pix_code || null,
     ];
 
     const result = await pool.query(query, values);

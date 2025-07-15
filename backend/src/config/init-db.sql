@@ -35,6 +35,9 @@ BEGIN
     END IF;
 END $$;
 
+-- Add pix_code column to gifts table
+ALTER TABLE gifts ADD COLUMN IF NOT EXISTS pix_code TEXT;
+
 -- Create Gifts table
 CREATE TABLE IF NOT EXISTS gifts (
     id UUID PRIMARY KEY,
@@ -45,7 +48,8 @@ CREATE TABLE IF NOT EXISTS gifts (
     is_reserved BOOLEAN DEFAULT FALSE,
     reserved_by VARCHAR(255),
     reserved_at TIMESTAMP,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    pix_code TEXT
 );
 
 -- Create Purchases table
@@ -71,14 +75,14 @@ CREATE INDEX IF NOT EXISTS idx_purchases_status ON purchases(status);
 -- Clear existing gifts and insert 10 fun gift examples in Portuguese
 DELETE FROM gifts;
 
-INSERT INTO gifts (id, name, description, price, image_url, is_reserved) VALUES
-    (gen_random_uuid(), 'Batedeira KitchenAid', 'Batedeira profissional para todas as suas aventuras culinárias - perfeita para biscoitos, bolos e pães!', 299.99, '/src/assets/teg1.jpeg', false),
-    (gen_random_uuid(), 'Panela Le Creuset', 'Panela de ferro fundido em cores lindas - ideal para refeições cozidas lentamente e jantares em família', 349.99, '/src/assets/teg1.jpeg', false),
-    (gen_random_uuid(), 'Máquina de Café Nespresso', 'Comece seus dias da melhor forma com esta máquina automática de café e espumador de leite', 199.99, '/src/assets/teg1.jpeg', false),
-    (gen_random_uuid(), 'Aspirador Dyson Sem Fio', 'Mantenha sua casa impecável com este aspirador sem fio potente', 399.99, '/src/assets/teg1.jpeg', false),
-    (gen_random_uuid(), 'Panela de Pressão Instant Pot', 'Panela de pressão multifuncional 7-em-1 - a nova melhor amiga da sua cozinha', 89.99, '/src/assets/teg1.jpeg', false),
-    (gen_random_uuid(), 'Liquidificador Vitamix Profissional', 'Crie smoothies, sopas e molhos com este liquidificador de nível profissional', 449.99, '/src/assets/teg1.jpeg', false),
-    (gen_random_uuid(), 'Fritadeira Elétrica Deluxe', 'Culinária saudável facilitada com esta fritadeira elétrica versátil', 129.99, '/src/assets/teg1.jpeg', false),
-    (gen_random_uuid(), 'Central de Casa Inteligente', 'Controle sua casa com comandos de voz - o futuro está aqui!', 179.99, '/src/assets/teg1.jpeg', false),
-    (gen_random_uuid(), 'Geladeira de Vinhos', 'Mantenha seus vinhos favoritos na temperatura perfeita', 299.99, '/src/assets/teg1.jpeg', false),
-    (gen_random_uuid(), 'Aspirador Robô', 'Deixe a tecnologia limpar seus pisos enquanto você relaxa', 249.99, '/src/assets/teg1.jpeg', false); 
+INSERT INTO gifts (id, name, description, price, image_url, is_reserved, pix_code) VALUES
+    (gen_random_uuid(), 'Batedeira KitchenAid', 'Batedeira profissional para todas as suas aventuras culinárias - perfeita para biscoitos, bolos e pães!', 299.99, '/src/assets/teg1.jpeg', false, 'pixcode1'),
+    (gen_random_uuid(), 'Panela Le Creuset', 'Panela de ferro fundido em cores lindas - ideal para refeições cozidas lentamente e jantares em família', 349.99, '/src/assets/teg1.jpeg', false, 'pixcode2'),
+    (gen_random_uuid(), 'Máquina de Café Nespresso', 'Comece seus dias da melhor forma com esta máquina automática de café e espumador de leite', 199.99, '/src/assets/teg1.jpeg', false, 'pixcode3'),
+    (gen_random_uuid(), 'Aspirador Dyson Sem Fio', 'Mantenha sua casa impecável com este aspirador sem fio potente', 399.99, '/src/assets/teg1.jpeg', false, 'pixcode4'),
+    (gen_random_uuid(), 'Panela de Pressão Instant Pot', 'Panela de pressão multifuncional 7-em-1 - a nova melhor amiga da sua cozinha', 89.99, '/src/assets/teg1.jpeg', false, 'pixcode5'),
+    (gen_random_uuid(), 'Liquidificador Vitamix Profissional', 'Crie smoothies, sopas e molhos com este liquidificador de nível profissional', 449.99, '/src/assets/teg1.jpeg', false, 'pixcode6'),
+    (gen_random_uuid(), 'Fritadeira Elétrica Deluxe', 'Culinária saudável facilitada com esta fritadeira elétrica versátil', 129.99, '/src/assets/teg1.jpeg', false, 'pixcode7'),
+    (gen_random_uuid(), 'Central de Casa Inteligente', 'Controle sua casa com comandos de voz - o futuro está aqui!', 179.99, '/src/assets/teg1.jpeg', false, 'pixcode8'),
+    (gen_random_uuid(), 'Geladeira de Vinhos', 'Mantenha seus vinhos favoritos na temperatura perfeita', 299.99, '/src/assets/teg1.jpeg', false, 'pixcode9'),
+    (gen_random_uuid(), 'Aspirador Robô', 'Deixe a tecnologia limpar seus pisos enquanto você relaxa', 249.99, '/src/assets/teg1.jpeg', false, 'pixcode10'); 

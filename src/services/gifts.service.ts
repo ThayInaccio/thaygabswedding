@@ -56,7 +56,7 @@ export const addGift = async (giftData: Omit<Gift, 'id' | 'created_at'>): Promis
 
 export const updateGift = async (id: string, giftData: Partial<Gift>): Promise<Gift> => {
   try {
-    const response = await api.put(`/gifts/${id}`, giftData);
+    const response = await api.patch(`/gifts/${id}`, giftData);
     return response.data.data;
   } catch (error: any) {
     console.error('Error updating gift:', error);
