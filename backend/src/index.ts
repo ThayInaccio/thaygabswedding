@@ -11,6 +11,25 @@ import rsvpRoutes from './routes/rsvp.routes';
 import giftsRoutes from './routes/gifts.routes';
 import purchaseRoutes from './routes/purchase.routes';
 
+// Migration function
+async function runMigration() {
+  try {
+    console.log('🔧 Running database migration on startup...');
+    
+    const sqlPath = path.join(__dirname, 'config', 'simple-migrate.sql');
+    if (fs.existsSync(sqlPath)) {
+      const sql = fs.readFileSync(sqlPath, 'utf-8');
+      await pool.query(sql);
+      console.log('✅ Database migration completed successfully');
+    } else {
+      console.log('⚠️ Migration file not found, skipping migration');
+    }
+  } catch (error: any) {
+    console.error('❌ Migration failed:', error.message);
+    // Don't exit the process, just log the error
+  }
+}
+
 dotenv.config();
 
 const app = express();

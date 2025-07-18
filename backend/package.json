@@ -4,7 +4,7 @@
   "description": "Backend for wedding website with RSVP and gift list functionality",
   "main": "dist/index.js",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "npm run migrate:simple && node dist/index.js",
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "test": "jest",
@@ -12,7 +12,7 @@
     "migrate:safe": "ts-node src/migrate-safe.ts",
     "migrate:simple": "ts-node src/migrate-simple.ts",
     "check-migration": "ts-node src/check-migration.ts"
- },
+  },
   "dependencies": {
     "@types/multer": "^1.4.13",
     "cors": "^2.8.5",
