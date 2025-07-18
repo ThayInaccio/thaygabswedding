@@ -25,10 +25,10 @@ if [ ! -f "src/migrate-safe.ts" ]; then
     exit 1
 fi
 
-# Run safe migration to ensure database schema is up to date
+# Run simple migration to ensure database schema is up to date
 echo "🗄️ Running database migration..."
 echo "🔍 Checking database connection..."
-npm run migrate:safe
+npm run migrate:simple
 echo "✅ Migration completed successfully"
 
 # Verify migration was successful

@@ -10,6 +10,7 @@
     "test": "jest",
     "migrate": "ts-node src/migrate.ts",
     "migrate:safe": "ts-node src/migrate-safe.ts",
+    "migrate:simple": "ts-node src/migrate-simple.ts",
     "check-migration": "ts-node src/check-migration.ts"
  },
   "dependencies": {
