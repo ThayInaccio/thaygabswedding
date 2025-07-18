@@ -55,18 +55,12 @@ export class GiftModel {
     const fields = Object.keys(giftData).filter(key => key !== 'id' && key !== 'created_at');
     const values = Object.values(giftData).filter((_, index) => fields[index]);
     
-    console.log('GiftModel.update called with:', { id, giftData, fields, values });
-    
     if (fields.length === 0) return null;
 
     const setClause = fields.map((field, index) => `${field} = $${index + 2}`).join(', ');
     const query = `UPDATE gifts SET ${setClause} WHERE id = $1 RETURNING *`;
     
-    console.log('Update query:', query);
-    console.log('Update values:', [id, ...values]);
-    
     const result = await pool.query(query, [id, ...values]);
-    console.log('Update result:', result.rows[0]);
     return result.rows[0] || null;
   }
 

@@ -3,21 +3,21 @@
 
 -- Function to safely add columns if they don't exist
 CREATE OR REPLACE FUNCTION add_column_if_not_exists(
-    table_name text,
-    column_name text,
-    column_definition text
+    p_table_name text,
+    p_column_name text,
+    p_column_definition text
 ) RETURNS void AS $$
 BEGIN
     IF NOT EXISTS (
         SELECT 1 
         FROM information_schema.columns 
-        WHERE table_name = $1 
-        AND column_name = $2
+        WHERE table_name = p_table_name 
+        AND column_name = p_column_name
     ) THEN
-        EXECUTE format('ALTER TABLE %I ADD COLUMN %I %s', table_name, column_name, column_definition);
-        RAISE NOTICE 'Added column % to table %', column_name, table_name;
+        EXECUTE format('ALTER TABLE %I ADD COLUMN %I %s', p_table_name, p_column_name, p_column_definition);
+        RAISE NOTICE 'Added column % to table %', p_column_name, p_table_name;
     ELSE
-        RAISE NOTICE 'Column % already exists in table %', column_name, table_name;
+        RAISE NOTICE 'Column % already exists in table %', p_column_name, p_table_name;
     END IF;
 END;
 $$ LANGUAGE plpgsql;
@@ -38,6 +38,9 @@ CREATE TABLE IF NOT EXISTS gifts (
 -- Add missing columns safely
 SELECT add_column_if_not_exists('gifts', 'pix_code', 'TEXT');
 SELECT add_column_if_not_exists('gifts', 'status', 'VARCHAR(32) DEFAULT ''available''');
+
+-- Update existing records to have default status if status column was just added
+UPDATE gifts SET status = 'available' WHERE status IS NULL;
 
 -- Ensure RSVPs table exists
 CREATE TABLE IF NOT EXISTS rsvps (

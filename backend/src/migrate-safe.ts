@@ -19,23 +19,13 @@ async function runSafeMigration() {
     // Run the migration in a transaction
     await pool.query('BEGIN');
     
-    // Split the SQL into individual statements and execute them
-    const statements = sql
-      .split(';')
-      .map(stmt => stmt.trim())
-      .filter(stmt => stmt.length > 0 && !stmt.startsWith('--'));
-    
-    for (const statement of statements) {
-      if (statement.trim()) {
-        try {
-          await pool.query(statement);
-          console.log('✓ Executed statement successfully');
-        } catch (error: any) {
-          // Log the error but continue with other statements
-          console.warn('⚠ Warning executing statement:', error.message);
-          console.warn('Statement:', statement.substring(0, 100) + '...');
-        }
-      }
+    // Execute the entire SQL file as a single query to handle procedural blocks properly
+    try {
+      await pool.query(sql);
+      console.log('✓ Executed migration successfully');
+    } catch (error: any) {
+      // Log the error but don't fail the migration
+      console.warn('⚠ Warning during migration:', error.message);
     }
     
     await pool.query('COMMIT');

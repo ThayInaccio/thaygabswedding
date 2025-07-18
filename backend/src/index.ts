@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import pool from './config/db.config';
 import rsvpRoutes from './routes/rsvp.routes';
 import giftsRoutes from './routes/gifts.routes';
 import purchaseRoutes from './routes/purchase.routes';
@@ -158,6 +159,42 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+// Database health check endpoint
+app.get('/health/db', async (req, res) => {
+  try {
+    // Check if gifts table has required columns
+    const columns = await pool.query(`
+      SELECT column_name 
+      FROM information_schema.columns 
+      WHERE table_name = 'gifts'
+    `);
+    
+    const existingColumns = columns.rows.map((col: any) => col.column_name);
+    const requiredColumns = ['id', 'name', 'description', 'price', 'image_url', 'is_reserved', 'pix_code', 'status'];
+    const missingColumns = requiredColumns.filter(col => !existingColumns.includes(col));
+    
+    if (missingColumns.length > 0) {
+      res.status(500).json({ 
+        status: 'ERROR', 
+        message: 'Database migration needed',
+        missingColumns 
+      });
+    } else {
+      res.json({ 
+        status: 'OK', 
+        message: 'Database schema is up to date',
+        columns: existingColumns 
+      });
+    }
+  } catch (error: any) {
+    res.status(500).json({ 
+      status: 'ERROR', 
+      message: 'Database connection failed',
+      error: error.message 
+    });
+  }
 });
 
 // Error handling middleware
