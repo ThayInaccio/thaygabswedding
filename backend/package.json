@@ -7,7 +7,9 @@
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "migrate": "ts-node src/migrate.ts",
+    "migrate:safe": "ts-node src/migrate-safe.ts"
  },
   "dependencies": {
     "@types/multer": "^1.4.13",

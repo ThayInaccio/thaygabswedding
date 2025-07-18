@@ -14,6 +14,7 @@ router.get('/:id', giftsController.getGiftById);
 
 // Update gift
 router.put('/:id', giftsController.updateGift);
+router.patch('/:id', giftsController.updateGift);
 
 // Reserve gift
 router.put('/:id/reserve', giftsController.reserveGift);

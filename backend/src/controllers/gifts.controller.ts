@@ -82,10 +82,18 @@ export const updateGift = async (req: Request, res: Response) => {
     const { id } = req.params;
     const updateData = req.body;
 
+    console.log('Update gift request:', {
+      id,
+      body: req.body,
+      updateData
+    });
+
     // Ensure pix_code is passed if present
     if (typeof updateData.pix_code === 'undefined' && typeof req.body.pix_code !== 'undefined') {
       updateData.pix_code = req.body.pix_code;
     }
+
+    console.log('Final update data:', updateData);
 
     const gift = await GiftModel.update(id, updateData);
     
